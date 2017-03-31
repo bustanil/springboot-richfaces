@@ -12,6 +12,18 @@ public class Todo {
     private String task;
     private Boolean completed = false;
 
+    private Todo(){}
+
+    public Todo(String task) {
+        this.task = task;
+        this.completed = false;
+    }
+
+    public Todo(String task, boolean completed) {
+        this.task = task;
+        this.completed = completed;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

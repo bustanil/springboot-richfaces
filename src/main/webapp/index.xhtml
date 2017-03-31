@@ -7,17 +7,27 @@
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
     <h:head>
 
     </h:head>
-    <h:body>
-        <h:form>
-            <h:outputLabel value="Hello, world"/>
-            <h:inputText id="messageInput" value="#{helloController.message}"/>
-            <h:outputText id="messageLabel" value="#{helloController.message}"/>
-            <a4j:commandButton execute="messageInput" render="messageLabel" value="Submit"/>
-        </h:form>
-    </h:body>
-</f:view>
+<h:body>
+
+    <h:form>
+        <ul>
+            <ui:repeat value="#{todoController.todoList}" var="todo">
+                <li>
+                    <h:selectBooleanCheckbox value="#{todo.completed}">
+                        <a4j:ajax event="change" execute="@this" render="@form"/>
+                    </h:selectBooleanCheckbox>
+                    <span style="#{todo.completed ? 'text-decoration: line-through' : ''}">
+                        <h:outputText value="#{todo.task}"/>
+                    </span>
+                    <a4j:commandLink value="remove" actionListener="#{todoController.removeTask}" render="@form"/>
+                </li>
+            </ui:repeat>
+        </ul>
+        <h:inputText id="newTask" value="#{todoController.newTask}" />
+        <a4j:commandButton value="Submit" execute="newTask" render="@form" actionListener="#{todoController.addNewTask}"/>
+    </h:form>
+</h:body>
 </html>
