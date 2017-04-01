@@ -13,21 +13,35 @@
 <h:body>
 
     <h:form>
+        <div>
+            <h:selectBooleanCheckbox value="#{todoController.selectAll}">
+                <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.selectAll}"/>
+            </h:selectBooleanCheckbox>
+        </div>
         <ul>
             <ui:repeat value="#{todoController.todoList}" var="todo">
                 <li>
                     <h:selectBooleanCheckbox value="#{todo.completed}">
-                        <a4j:ajax event="change" execute="@this" render="@form"/>
+                        <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.updateTask}"/>
+                        <f:attribute name="todoId" value="#{todo.id}" />
                     </h:selectBooleanCheckbox>
-                    <span style="#{todo.completed ? 'text-decoration: line-through' : ''}">
-                        <h:outputText value="#{todo.task}"/>
-                    </span>
-                    <a4j:commandLink value="remove" actionListener="#{todoController.removeTask}" render="@form"/>
+                        <rich:inplaceInput value="#{todo.task}" style="#{todo.completed ? 'text-decoration: line-through' : ''}">
+                            <a4j:ajax event="change" execute="@this" render="@form" listener="#{todoController.updateTask}"/>
+                            <f:attribute name="todoId" value="#{todo.id}" />
+                        </rich:inplaceInput>
+                    <a4j:commandLink value="[x]" action="#{todoController.removeTask(todo)}" render="@form"/>
                 </li>
             </ui:repeat>
         </ul>
         <h:inputText id="newTask" value="#{todoController.newTask}" />
-        <a4j:commandButton value="Submit" execute="newTask" render="@form" actionListener="#{todoController.addNewTask}"/>
+        <a4j:commandButton value="Submit" execute="newTask" render="@form" action="#{todoController.addNewTask()}"/>
+
+        <div>
+            <a4j:commandLink value="All" render="@form" action="#{todoController.setFilter('All')}"/> |
+            <a4j:commandLink value="Active" render="@form" action="#{todoController.setFilter('Active')}"/> |
+            <a4j:commandLink value="Completed" render="@form" action="#{todoController.setFilter('Completed')}"/> |
+            <a4j:commandLink value="Clear Completed" render="@form" action="#{todoController.clearCompleted()}" rendered="#{todoController.hasCompletedTodos}"/>
+        </div>
     </h:form>
 </h:body>
 </html>
